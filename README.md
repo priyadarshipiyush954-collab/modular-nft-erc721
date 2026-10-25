@@ -124,6 +124,14 @@ Notes: gas is deterministic on the in-process EVM, so the repeated trials vary o
 
 The contracts, test scripts and diagrams were developed with the assistance of an AI model (Claude, by Anthropic). Every number above is produced by the scripts in this repository and can be reproduced with the commands in "Run it locally".
 
+## Architecture
+
+![Repository architecture](docs/architecture.png)
+
+How the pieces fit together. `compile.js` builds the contracts in `contracts/` against OpenZeppelin 5.0.2 into `artifacts/compiled.json`; `gen_variants.js` writes the 16 factorial variants to `variants/`. The three experiment scripts run on the in-process Hardhat EVM (Shanghai) through ethers 6: `experiment.js` writes `results.json`, `ablation.js` (which also compiles the variants) writes `results/ablation.json`, and `security_tests.js` writes `results/security_tests.json`. `analyze.js` combines `results.json` and `results/ablation.json` into `results/derived.json`. Slither runs separately with a native solc 0.8.26 and its output is stored in `results/`. The `remix/` copies are only for the interactive Remix demonstration.
+
+Blue boxes are scripts in `scripts/`, yellow boxes are files in the repository, and grey boxes are external tools. The diagram source is [`docs/architecture.tex`](docs/architecture.tex) (TikZ); render it with `tectonic docs/architecture.tex` and convert the PDF to PNG.
+
 ## Layout
 
 ```
@@ -133,7 +141,7 @@ scripts/      compile.js, experiment.js, security_tests.js, gen_variants.js, abl
 results/      gas_results.csv, raw Slither output, ablation.json, security_tests.json, derived.json
 variants/     16 generated ablation contracts + Looper helper
 results.json  Output of scripts/experiment.js
-docs/         UML diagrams (PNG + Graphviz source) and gas chart
+docs/         UML and architecture diagrams (PNG + Graphviz/TikZ source) and gas charts
 ```
 
 ## License
